@@ -6,14 +6,14 @@ type cont =
   | Next of tree * cont
   | Done
 
-let print_tree tree cont =
+let print_tree tree =
   let tree_ref = ref tree in
-  let cont_ref = ref cont in
+  let cont_ref = ref Done in
   let break_ref = ref false in
   while not !break_ref do
     match !tree_ref, !cont_ref with
-    | Branch {left; _}, cont ->
-      cont_ref := Next (!tree_ref, cont);
+    | (Branch {left; _} as tree), cont ->
+      cont_ref := Next (tree, cont);
       tree_ref := left;
     | Leaf, Next (Branch {right; content; _}, next) ->
       print_endline content;
@@ -51,4 +51,4 @@ let () =
       ; content = "4"
       }
   in
-  print_tree tree Done
+  print_tree tree

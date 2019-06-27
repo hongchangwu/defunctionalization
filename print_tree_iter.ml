@@ -1,54 +1,85 @@
 type tree =
-  | Branch of {left : tree; right : tree; content : string}
+  | Branch of {content : string; left : tree; right : tree}
   | Leaf
 
 type cont =
-  | Next of tree * cont
+  | Next of string * tree * cont
   | Done
 
-let print_tree tree =
+(* let rec print_tree tree cont =
+ *   match tree with
+ *   | Leaf ->
+ *     apply cont
+ *   | Branch {content; left; right} ->
+ *     print_tree left (Next (content, right, cont))
+ *
+ * and apply = function
+ *   | Done ->
+ *     ()
+ *   | Next (content, tree, cont) ->
+ *     print_endline content;
+ *     print_tree tree cont *)
+
+(* let rec print_tree tree cont =
+ *   match tree with
+ *   | Leaf ->
+ *     begin match cont with
+ *       | Done ->
+ *         ()
+ *       | Next (content, tree, cont) ->
+ *         print_endline content;
+ *         print_tree tree cont
+ *     end
+ *   | Branch {content; left; right} ->
+ *     print_tree left (Next (content, right, cont)) *)
+
+let print_tree tree cont =
   let tree_ref = ref tree in
-  let cont_ref = ref Done in
+  let cont_ref = ref cont in
   let break_ref = ref false in
   while not !break_ref do
-    match !tree_ref, !cont_ref with
-    | (Branch {left; _} as tree), cont ->
-      cont_ref := Next (tree, cont);
+    match !tree_ref with
+    | Leaf ->
+      begin match !cont_ref with
+        | Done ->
+          break_ref := true
+        | Next (content, tree, next) ->
+          print_endline content;
+          tree_ref := tree;
+          cont_ref := next
+      end
+    | Branch {content; left; right} ->
+      cont_ref := Next (content, right, !cont_ref);
       tree_ref := left;
-    | Leaf, Next (Branch {right; content; _}, next) ->
-      print_endline content;
-      tree_ref := right;
-      cont_ref := next
-    | _ ->
-      break_ref := true
   done
 
 let () =
-  let tree =
+ let tree =
     Branch
-      { left =
+      { content = "4"
+      ; left =
           Branch
-            { left =
+            { content = "2"
+            ; left =
                 Branch
-                  { left = Leaf
+                  { content = "1"
+                  ; left = Leaf
                   ; right = Leaf
-                  ; content = "1"
+
                   }
             ; right =
                 Branch
-                  { left = Leaf
+                  { content = "3"
+                  ; left = Leaf
                   ; right = Leaf
-                  ; content = "3"
                   }
-            ; content = "2"
             }
       ; right =
           Branch
-            { left = Leaf
+            { content = "5"
+            ; left = Leaf
             ; right = Leaf
-            ; content = "5"
             }
-      ; content = "4"
       }
   in
-  print_tree tree
+  print_tree tree Done

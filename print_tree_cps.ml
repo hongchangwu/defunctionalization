@@ -2,13 +2,16 @@ type tree =
   | Branch of {content : string; left : tree; right : tree}
   | Leaf
 
-let rec print_tree = function
+let rec print_tree tree cont =
+  match tree with
   | Leaf ->
-    ()
+    cont ()
   | Branch {content; left; right} ->
-    print_tree left;
-    print_endline content;
-    print_tree right
+    print_tree
+      left
+      (fun () ->
+        print_endline content;
+        print_tree right cont)
 
 let () =
   let tree =
@@ -39,4 +42,4 @@ let () =
             }
       }
   in
-  print_tree tree
+  print_tree tree (fun () -> ())

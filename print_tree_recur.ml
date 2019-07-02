@@ -1,6 +1,6 @@
 type tree =
-  | Branch of {content : string; left : tree; right : tree}
   | Leaf
+  | Branch of {content : string; left : tree; right : tree}
 
 let rec print_tree = function
   | Leaf ->

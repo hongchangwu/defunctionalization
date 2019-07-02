@@ -1,10 +1,11 @@
 type tree =
-  | Branch of {content : string; left : tree; right : tree}
   | Leaf
+  | Branch of {content : string; left : tree; right : tree}
+
 
 type cont =
-  | Next of string * tree * cont
   | Done
+  | Next of string * tree * cont
 
 (* let rec print_tree tree cont =
  *   match tree with

@@ -1,11 +1,6 @@
-type tree =
-  | Leaf
-  | Branch of {content : string; left : tree; right : tree}
+type tree = Leaf | Branch of {content: string; left: tree; right: tree}
 
-
-type cont =
-  | Done
-  | Next of string * tree * cont
+type cont = Done | Next of string * tree * cont
 
 (* let rec print_tree tree cont =
  *   match tree with
@@ -40,47 +35,28 @@ let print_tree tree cont =
   let break_ref = ref false in
   while not !break_ref do
     match !tree_ref with
-    | Leaf ->
-      begin match !cont_ref with
-        | Done ->
+    | Leaf -> (
+      match !cont_ref with
+      | Done ->
           break_ref := true
-        | Next (content, tree, next) ->
-          print_endline content;
-          tree_ref := tree;
-          cont_ref := next
-      end
+      | Next (content, tree, next) ->
+          print_endline content ;
+          tree_ref := tree ;
+          cont_ref := next )
     | Branch {content; left; right} ->
-      cont_ref := Next (content, right, !cont_ref);
-      tree_ref := left;
+        cont_ref := Next (content, right, !cont_ref) ;
+        tree_ref := left
   done
 
 let () =
- let tree =
+  let tree =
     Branch
-      { content = "4"
-      ; left =
+      { content= "4"
+      ; left=
           Branch
-            { content = "2"
-            ; left =
-                Branch
-                  { content = "1"
-                  ; left = Leaf
-                  ; right = Leaf
-
-                  }
-            ; right =
-                Branch
-                  { content = "3"
-                  ; left = Leaf
-                  ; right = Leaf
-                  }
-            }
-      ; right =
-          Branch
-            { content = "5"
-            ; left = Leaf
-            ; right = Leaf
-            }
-      }
+            { content= "2"
+            ; left= Branch {content= "1"; left= Leaf; right= Leaf}
+            ; right= Branch {content= "3"; left= Leaf; right= Leaf} }
+      ; right= Branch {content= "5"; left= Leaf; right= Leaf} }
   in
   print_tree tree Done
